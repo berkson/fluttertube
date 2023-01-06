@@ -41,7 +41,7 @@ class DataSearch extends SearchDelegate<String> {
             future: suggestions(query),
             builder: (context, snapshot) {
               return (snapshot.data == null || snapshot.data!.isEmpty)
-                  ? const CircularProgressIndicator()
+                  ? const Center(child: CircularProgressIndicator())
                   : ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {

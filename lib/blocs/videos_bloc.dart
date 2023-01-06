@@ -15,7 +15,7 @@ class VideosBloc extends BlocBase {
 
   //getter para ter acesso a entrada do stream do bloc para consulta
   Sink get inSearch => _searchController.sink;
-  final StreamController _searchController = StreamController<String>();
+  final StreamController _searchController = StreamController<String?>();
 
   VideosBloc() {
     api = Api();
@@ -31,8 +31,14 @@ class VideosBloc extends BlocBase {
     super.dispose();
   }
 
-  void _search(String search) async {
-    videos = await api.search(search);
+  void _search(String? search) async {
+    if (search != null) {
+      videos.clear();
+      videos = await api.search(search);
+    } else {
+      videos += await api.nextPage();
+    }
+
     _videosController.sink.add(videos);
   }
 }

@@ -11,45 +11,63 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Container(
-            margin: EdgeInsets.zero,
-            padding: EdgeInsets.zero,
-            height: 60,
-            width: MediaQuery.of(context).size.width / 2,
-            child: Image.asset('images/you-ico.png', fit: BoxFit.cover),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.black87,
-          actions: [
-            const Align(
-              alignment: Alignment.center,
-              child: Text('0'),
-            ),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.star)),
-            IconButton(
-                onPressed: () async {
-                  String? result = await showSearch(
-                      context: context, delegate: DataSearch());
-                  if (result!.isNotEmpty) {
-                    BlocProvider.getBloc<VideosBloc>().inSearch.add(result);
-                  }
-                },
-                icon: const Icon(Icons.search))
-          ],
+      appBar: AppBar(
+        title: Container(
+          margin: EdgeInsets.zero,
+          padding: EdgeInsets.zero,
+          height: 60,
+          width: MediaQuery.of(context).size.width / 2,
+          child: Image.asset('images/you-ico.png', fit: BoxFit.cover),
         ),
-        body: StreamBuilder(
-          builder: (context, snapshot) {
-            return !snapshot.hasData
-                ? Container()
-                : ListView.builder(
-                    itemBuilder: (context, index) {
+        elevation: 0,
+        backgroundColor: Colors.black87,
+        actions: [
+          const Align(
+            alignment: Alignment.center,
+            child: Text('0'),
+          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.star)),
+          IconButton(
+              onPressed: () async {
+                String? result =
+                    await showSearch(context: context, delegate: DataSearch());
+                if (result!.isNotEmpty) {
+                  BlocProvider.getBloc<VideosBloc>().inSearch.add(result);
+                }
+              },
+              icon: const Icon(Icons.search))
+        ],
+      ),
+      body: StreamBuilder(
+        initialData: const [],
+        builder: (context, snapshot) {
+          return !snapshot.hasData
+              ? Container()
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    // se ele for para o último vídeo passa null e pega a próxima página
+                    if (index < snapshot.data.length) {
                       return VideoTile(video: snapshot.data[index]);
-                    },
-                    itemCount: snapshot.data.length,
-                  );
-          },
-          stream: BlocProvider.getBloc<VideosBloc>().outVideos,
-        ), backgroundColor: Colors.black87,);
+                    } else if (index > 1) {
+                      BlocProvider.getBloc<VideosBloc>().inSearch.add(null);
+                      return Container(
+                        height: 40,
+                        width: 40,
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.red)),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                  itemCount: snapshot.data.length + 1,
+                );
+        },
+        stream: BlocProvider.getBloc<VideosBloc>().outVideos,
+      ),
+      backgroundColor: Colors.black87,
+    );
   }
 }
