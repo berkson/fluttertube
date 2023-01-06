@@ -1,4 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertube/blocs/videos_bloc.dart';
 import 'package:fluttertube/delegates/data_search.dart';
 
 class Home extends StatelessWidget {
@@ -27,11 +29,14 @@ class Home extends StatelessWidget {
               onPressed: () async {
                 String? result =
                     await showSearch(context: context, delegate: DataSearch());
+                if (result!.isNotEmpty) {
+                  BlocProvider.getBloc<VideosBloc>().inSearch.add(result);
+                }
               },
               icon: const Icon(Icons.search))
         ],
       ),
-      body: Container(),
+      body: Container()
     );
   }
 }
