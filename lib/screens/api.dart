@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../model/video.dart';
+import '../models/video.dart';
+
 
 class Api {
   static const apiKey = "AIzaSyDyXaGidclgs6Oly6HbZjAm5WFS5nAAGJo";
