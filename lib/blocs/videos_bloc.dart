@@ -33,7 +33,7 @@ class VideosBloc extends BlocBase {
 
   void _search(String? search) async {
     if (search != null) {
-      videos.clear();
+      videos = [];
       videos = await api.search(search);
     } else {
       videos += await api.nextPage();

@@ -11,7 +11,7 @@ class Api {
 
   Future<List<Video>> search(String? search) async {
     _search = search;
-
+    print("Buscando");
     http.Response response = await http.get(Uri.parse(
         "https://www.googleapis.com/youtube/v3/search?part=snippet&q=$_search&type=video&key=$apiKey&maxResults=10"));
     return decode(response);
