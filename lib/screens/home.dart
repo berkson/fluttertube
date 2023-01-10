@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertube/blocs/favorite_bloc.dart';
 import 'package:fluttertube/blocs/videos_bloc.dart';
 import 'package:fluttertube/delegates/data_search.dart';
+import 'package:fluttertube/screens/favorites.dart';
 import '../models/video.dart';
 
 import '../widgets/video_tile.dart';
@@ -29,7 +30,7 @@ class Home extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: StreamBuilder<Map<String, Video>>(
-              initialData: const {},
+                initialData: const {},
                 stream: bloc.outFav,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -38,7 +39,12 @@ class Home extends StatelessWidget {
                   return Container();
                 }),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.star)),
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const Favorites()));
+              },
+              icon: const Icon(Icons.star)),
           IconButton(
               onPressed: () async {
                 String? result =
@@ -58,8 +64,8 @@ class Home extends StatelessWidget {
               : ListView.builder(
                   itemBuilder: (context, index) {
                     // se ele for para o último vídeo passa null e pega a próxima página
-                    if (index < snapshot.data.length) {
-                      return VideoTile(video: snapshot.data[index]);
+                    if (index < snapshot.data!.length) {
+                      return VideoTile(video: snapshot.data![index]);
                     } else if (index > 1) {
                       BlocProvider.getBloc<VideosBloc>().inSearch.add(null);
                       return Container(
